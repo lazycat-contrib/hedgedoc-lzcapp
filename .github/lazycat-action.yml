@@ -22,10 +22,10 @@ images:
     channel: stable
     sort: semver
     tag_regex: '^1[.]12[.][0-9]+$'
-    image_template: quay.1ms.run/hedgedoc/hedgedoc:{tag}
     delivery:
       mode: mirror
       require_digest_match: true
+      image_template: quay.1ms.run/hedgedoc/hedgedoc:{tag}
 release:
   use_github_release_notes: true
   store_changelog_format: plain
