@@ -1,0 +1,51 @@
+application:
+  subdomain: hedgedoc
+  multi_instance: false
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://hedgedoc:3000/
+
+services:
+  hedgedoc:
+    # upstream: quay.io/hedgedoc/hedgedoc:1.12.0
+    image: quay.1ms.run/hedgedoc/hedgedoc:1.12.0
+    environment:
+      - |-
+        CMD_SESSION_SECRET={{ stable_secret "hedgedoc_session_secret" | replace "\r" "" | replace "\n" "" }}
+      # Served behind the LazyCat HTTPS entry, so TLS terminates upstream.
+      - CMD_PROTOCOL_USESSL=false
+      - CMD_URL_ADDPORT=false
+      - |-
+        CMD_DOMAIN={{ .S.AppDomain }}
+      - CMD_ALLOW_ANONYMOUS=false
+      - CMD_ALLOW_FREEURL=false
+      - CMD_DEFAULT_PERMISSION=editable
+      - CMD_IMAGE_UPLOAD_TYPE=filesystem
+      # Keep the SQLite file on the bound data directory, not the image layer.
+      - CMD_DB_URL=sqlite:///hedgedoc/db/hedgedoc.sqlite
+    binds:
+      - /lzcapp/var/db:/hedgedoc/db
+      - /lzcapp/var/uploads:/hedgedoc/public/uploads
+
+usage: |
+  HedgeDoc 是协作文档编辑器：Markdown 实时协作、支持图表、演示模式和版本历史。
+
+  使用方法：
+  1. 打开应用，在登录框下方的注册入口用「邮箱 + 密码」创建第一个账号。
+  2. 登录后点「New note」新建笔记，写好的链接可以分享给他人协作。
+  3. 右上角可切换视图、演示模式与导出。
+
+  说明：账号是应用自己的邮箱账号，与懒猫账号无关；请用常用邮箱注册并记住密码。
+
+  数据与安全：
+  - 笔记内容和上传的图片保存在 /lzcapp/var/data，卸载应用会一并删除，请定期导出备份。
+  - 默认使用内置 SQLite，无需外部数据库。
+  - 会话密钥由平台稳定密钥生成，不会使用上游默认的固定值。
+  - 已关闭匿名创建笔记（CMD_ALLOW_ANONYMOUS=false），但保留了邮箱注册入口，首位使用者可自助注册后登录。
+  - 应用经懒猫入口鉴权访问。
+
+  说明：
+  - 本包基于 HedgeDoc 1.x LTS 线（1.12.0），不是 2.x alpha。
+  - 未做真机验证：注册登录、协作编辑、图片上传、演示模式、导出以及重启后持久化均未在设备上实测。

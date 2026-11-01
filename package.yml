@@ -1,0 +1,18 @@
+package: community.lazycat.app.hedgedoc
+version: 1.12.0
+name: HedgeDoc
+description: "Collaborative Markdown notes with live editing, diagrams and slide mode."
+min_os_version: "1.5.0"
+homepage: https://github.com/hedgedoc/hedgedoc
+author: hedgedoc
+license: AGPL-3.0
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: HedgeDoc
+    description: "协作文档编辑器：Markdown 实时协作、图表、演示模式与版本历史。"
+  en:
+    name: HedgeDoc
+    description: "Collaborative Markdown notes with live editing, diagrams and slide mode."
