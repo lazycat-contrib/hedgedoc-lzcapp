@@ -18,7 +18,7 @@ images:
   - id: hedgedoc
     target: service
     service: hedgedoc
-    source: quay.io/hedgedoc/hedgedoc
+    source: hedgedoc/hedgedoc
     channel: stable
     sort: semver
     tag_regex: '^1[.]12[.][0-9]+$'
